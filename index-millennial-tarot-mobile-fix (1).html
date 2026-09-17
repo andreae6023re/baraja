@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Millennial Tarot</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+:root{--bg:#111317;--panel:#191b20;--line:#45423d;--text:#e8e0d2;--muted:#aaa294;--gold:#c6a875;--black:#000}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{font-family:Inter,sans-serif}
+button{font:inherit}
+.page{width:min(calc(100% - 28px),900px);margin:auto;padding:30px 0 60px}
+.home{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.ornament{color:var(--gold);font-size:28px;margin-bottom:22px}
+.eyebrow{color:var(--gold);letter-spacing:.25em;font-size:10px;font-weight:600;margin:0 0 18px}
+h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:500}
+h1{font-size:clamp(52px,10vw,88px);line-height:.82;margin:0}
+h1 em{color:var(--gold)}
+h2{font-size:clamp(40px,8vw,64px);margin:0 0 5px}
+.intro{color:var(--muted);line-height:1.7;max-width:520px;margin:12px auto 26px}
+.primary{border:1px solid var(--gold);background:transparent;color:var(--text);padding:14px 25px;border-radius:2px;cursor:pointer}
+.primary:hover{background:var(--gold);color:#151515}
+.footer-note{color:#77746d;font-family:"Cormorant Garamond",serif;font-size:16px;margin-top:50px}
+.back{border:0;background:none;color:var(--muted);padding:0;cursor:pointer;margin-bottom:40px}
+.spread-list{display:grid;gap:12px;margin-top:30px}
+.spread-card{width:100%;display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:16px;text-align:left;border:1px solid var(--line);background:rgba(25,27,32,.78);color:var(--text);padding:18px;cursor:pointer}
+.spread-card:hover{border-color:var(--gold)}
+.spread-number{color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:28px}
+.spread-card strong{display:block;font-family:"Cormorant Garamond",serif;font-size:25px;font-weight:500}
+.spread-card small{display:block;color:var(--muted);margin-top:3px}
+.arrow{color:var(--gold);font-size:20px}
+
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:28px}
+.tarot-item{min-width:0;text-align:center}
+.card-frame{background:#000;overflow:hidden;width:100%;aspect-ratio:2/3;line-height:0}
+.card-image{display:block;width:104%;height:104%;max-width:none;margin:-2%;object-fit:cover;border:0;box-shadow:none;cursor:pointer;transition:transform .18s ease}
+.card-image:hover{transform:scale(1.015)}
+.tarot-item.reversed .card-image{transform:rotate(180deg) scale(1.04)}
+.tarot-item.reversed .card-image:hover{transform:rotate(180deg) scale(1.055)}
+.card-label{margin-top:10px}
+.card-position{color:var(--gold);font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.card-name{font-family:"Cormorant Garamond",serif;font-size:25px;margin-top:3px}
+.card-state{color:var(--muted);font-size:9px;letter-spacing:.13em;margin-top:3px}
+.tap-hint{color:#77746d;font-size:10px;margin-top:5px}
+.draw-card{min-height:260px;border:1px dashed #575044;background:#000;color:var(--gold);cursor:pointer;font-family:"Cormorant Garamond",serif;font-size:24px}
+.draw-card:hover{background:#0b0b0b;border-color:var(--gold)}
+.draw-card span{display:block;margin-top:12px}
+.reading .primary{margin-top:28px}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:flex-end;justify-content:center;padding:14px;z-index:20}
+.modal.open{display:flex}
+.modal-box{width:min(100%,620px);max-height:88svh;overflow:auto;background:#191b20;border:1px solid #45423d;padding:24px 22px 28px;box-shadow:0 20px 60px #000}
+.modal-close{float:right;border:0;background:none;color:var(--muted);font-size:24px;cursor:pointer}
+.modal-eyebrow{color:var(--gold);letter-spacing:.18em;font-size:9px;text-transform:uppercase;margin:4px 0 8px}
+.modal h3{font-size:42px;line-height:1;margin:0 30px 14px 0}
+.modal .meaning{font-size:14px;line-height:1.7;color:var(--text);margin:0 0 14px}
+.modal .reverse{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
+.modal .reverse strong{color:var(--gold);font-weight:500}
+
+@media(max-width:650px){
+ .page{width:min(calc(100% - 24px),520px);padding:24px 0 48px}
+ .back{margin-bottom:30px}
+ .spread-card{padding:15px;grid-template-columns:40px 1fr auto}
+ .cards{grid-template-columns:1fr;gap:30px;margin-top:24px}
+ .tarot-item{width:100%}
+ .card-frame{width:86vw;max-width:390px;margin:0 auto}
+ .card-label{margin-top:9px}
+ .card-name{font-size:27px}
+ .draw-card{min-height:190px}
+ .modal{padding:10px}
+ .modal-box{padding:20px 18px 24px;max-height:90svh}
+ .modal h3{font-size:38px}
+}
+@media(min-width:651px){.draw-card{min-height:420px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">×</button>
+    <div class="modal-eyebrow" id="modalType"></div>
+    <h3 id="modalTitle"></h3>
+    <p class="meaning" id="modalMeaning"></p>
+    <p class="reverse" id="modalReverse"></p>
+  </div>
+</div>
+<script>
+const app=document.getElementById("app");
+const modal=document.getElementById("modal");
+const modalTitle=document.getElementById("modalTitle");
+const modalType=document.getElementById("modalType");
+const modalMeaning=document.getElementById("modalMeaning");
+const modalReverse=document.getElementById("modalReverse");
+const deck=[
+  ["El Loco", "Nuevos comienzos, libertad y confianza.", "Impulso para empezar algo nuevo y avanzar con curiosidad. Al revés puede señalar imprudencia, falta de preparación o miedo a dar el salto.", "carta-00-el-loco.jpg", "Arcanos Mayores"],
+  ["El Mago", "Recursos, iniciativa y capacidad de crear.", "Tienes herramientas para actuar y transformar una idea en algo concreto. Al revés: dispersión, manipulación o recursos mal utilizados.", "carta-01-el-mago.jpg", "Arcanos Mayores"],
+  ["La Sacerdotisa", "Intuición, misterio y conocimiento interior.", "Invita a observar, escuchar la intuición y no forzar una respuesta. Al revés: secretos, desconexión interior o ignorar señales.", "carta-02-la-sacerdotisa.jpg", "Arcanos Mayores"],
+  ["El Emperador", "Estructura, estabilidad y autoridad.", "Habla de orden, límites y responsabilidad. Al revés: rigidez, control excesivo o estructuras que ya no ayudan.", "carta-03-el-emperador.jpg", "Arcanos Mayores"],
+  ["La Emperatriz", "Creatividad, abundancia y cuidado.", "Representa crecimiento, creatividad, disfrute y capacidad de nutrir proyectos y relaciones. Al revés: bloqueo creativo o exceso de comodidad.", "carta-04-la-emperatriz.jpg", "Arcanos Mayores"],
+  ["Los Enamorados", "Elecciones, vínculos y valores personales.", "Una decisión importante guiada por lo que realmente valoras. También habla de conexión y acuerdos. Al revés: indecisión o conflicto entre deseo y valores.", "carta-05-los-enamorados.jpg", "Arcanos Mayores"],
+  ["El Hierofante", "Tradición, aprendizaje y guía.", "Puede señalar estudios, consejo, rituales o estructuras compartidas. Al revés: cuestionar normas o sentirte limitada por ellas.", "carta-06-el-hierofante.jpg", "Arcanos Mayores"],
+  ["El Carro", "Dirección, determinación y avance.", "Avanzar con voluntad hacia un objetivo, integrando fuerzas distintas. Al revés: falta de dirección o avanzar demasiado deprisa.", "carta-07-el-carro.jpg", "Arcanos Mayores"],
+  ["La Fuerza", "Coraje, paciencia y autocontrol.", "La fortaleza aparece mediante calma, constancia y gestión de los impulsos. Al revés: inseguridad, agotamiento o reacciones difíciles de contener.", "carta-08-la-fuerza.jpg", "Arcanos Mayores"],
+  ["El Ermitaño", "Introspección, búsqueda y pausa.", "Momento para retirarte un poco, pensar y encontrar tu propia respuesta. Al revés: aislamiento excesivo o evitar el contacto con los demás.", "carta-09-el-hermitano.jpg", "Arcanos Mayores"],
+  ["La Rueda de la Fortuna", "Cambios, ciclos y movimiento.", "Una etapa cambia y abre un nuevo ciclo. Invita a adaptarse al movimiento. Al revés: sensación de estancamiento o resistencia al cambio.", "carta-10-la-rueda-de-la-fortuna.jpg", "Arcanos Mayores"],
+  ["La Justicia", "Equilibrio, decisiones y consecuencias.", "Pide mirar los hechos con claridad y asumir las consecuencias de las decisiones. Al revés: desequilibrio, falta de claridad o decisiones poco honestas.", "carta-11-la-justicia.jpg", "Arcanos Mayores"],
+  ["El Colgado", "Pausa, perspectiva y soltar.", "No todo se resuelve actuando; a veces hace falta cambiar la mirada y dejar algo en suspensión. Al revés: bloqueo o sacrificio que ya no aporta.", "carta-12-el-colgado.jpg", "Arcanos Mayores"],
+  ["La Muerte", "Cierre, transformación y renovación.", "Marca el final de una etapa y la posibilidad de comenzar otra. Al revés: resistencia a cerrar un ciclo.", "carta-13-la-muerte.jpg", "Arcanos Mayores"],
+  ["La Templanza", "Equilibrio, integración y calma.", "Combinar elementos con paciencia y encontrar un ritmo sostenible. Al revés: excesos, impaciencia o falta de armonía.", "carta-14-la-templanza.jpg", "Arcanos Mayores"],
+  ["El Diablo", "Deseo, apego y patrones.", "Señala aquello que atrae con fuerza o mantiene atada a una situación. Al revés: tomar conciencia y empezar a liberarse de un patrón.", "carta-15-el-diablo.jpg", "Arcanos Mayores"],
+  ["La Torre", "Cambio brusco, ruptura y revelación.", "Una estructura se rompe para mostrar algo que estaba oculto o ya no se sostenía. Al revés: resistencia al cambio o crisis contenida.", "carta-16-la-torre.jpg", "Arcanos Mayores"],
+  ["La Estrella", "Esperanza, inspiración y renovación.", "Recuperar confianza, claridad y conexión con lo que inspira. Al revés: desánimo o dificultad para reconocer tus propios recursos.", "carta-17-la-estrella.jpg", "Arcanos Mayores"],
+  ["La Luna", "Intuición, emociones y lo desconocido.", "Puede haber dudas, sueños y aspectos que todavía no están claros. Al revés: empezar a despejar una confusión o miedo.", "carta-18-la-luna.jpg", "Arcanos Mayores"],
+  ["El Sol", "Claridad, vitalidad y alegría.", "Trae visibilidad, energía y una sensación de apertura. Al revés: alegría bloqueada, exceso de confianza o pequeñas sombras sobre algo positivo.", "carta-19-el-sol.jpg", "Arcanos Mayores"],
+  ["El Juicio", "Despertar, revisión y llamada interior.", "Momento de reconocer lo aprendido y responder a una nueva etapa. Al revés: dudas ante una decisión o dificultad para cerrar el pasado.", "carta-20-el-juicio.jpg", "Arcanos Mayores"],
+  ["El Mundo", "Culminación, integración y cierre.", "Una etapa llega a un punto de realización y permite mirar el camino completo. Al revés: sensación de asunto pendiente o cierre incompleto.", "carta-21-el-mundo.jpg", "Arcanos Mayores"],
+  ["As de Copas", "Un comienzo relacionado con emociones, vínculos, sensibilidad y disfrute.", "Al revés: oportunidad bloqueada, exceso o dificultad para iniciar.", "carta-22-as-de-copas.jpg", "Arcanos Menores"],
+  ["Dos de Copas", "Equilibrio, elección o encuentro relacionado con emociones, vínculos, sensibilidad y disfrute.", "Al revés: tensión, indecisión o falta de equilibrio.", "carta-23-dos-de-copas.jpg", "Arcanos Menores"],
+  ["Tres de Copas", "Expansión, colaboración o expresión dentro de emociones, vínculos, sensibilidad y disfrute.", "Al revés: dispersión, retrasos o colaboración difícil.", "carta-24-tres-de-copas.jpg", "Arcanos Menores"],
+  ["Cuatro de Copas", "Estabilidad, pausa o necesidad de revisar emociones, vínculos, sensibilidad y disfrute.", "Al revés: estancamiento, apatía o necesidad de movimiento.", "carta-25-cuatro-de-copas.jpg", "Arcanos Menores"],
+  ["Cinco de Copas", "Desafío, cambio o fricción en torno a emociones, vínculos, sensibilidad y disfrute.", "Al revés: recuperación, aprendizaje o conflicto que empieza a disminuir.", "carta-26-cinco-de-copas.jpg", "Arcanos Menores"],
+  ["Seis de Copas", "Avance, intercambio o recuerdo relacionado con emociones, vínculos, sensibilidad y disfrute.", "Al revés: dificultad para avanzar o apego al pasado.", "carta-27-seis-de-copas.jpg", "Arcanos Menores"],
+  ["Siete de Copas", "Evaluación, estrategia o búsqueda de perspectiva sobre emociones, vínculos, sensibilidad y disfrute.", "Al revés: dudas, expectativas poco realistas o falta de estrategia.", "carta-28-siete-de-copas.jpg", "Arcanos Menores"],
+  ["Ocho de Copas", "Movimiento, dedicación o profundización en emociones, vínculos, sensibilidad y disfrute.", "Al revés: bloqueo, exceso de esfuerzo o dificultad para avanzar.", "carta-29-ocho-de-copas.jpg", "Arcanos Menores"],
+  ["Nueve de Copas", "Madurez, resultado o satisfacción vinculada a emociones, vínculos, sensibilidad y disfrute.", "Al revés: insatisfacción, exceso o resultado que no llena.", "carta-30-nueve-de-copas.jpg", "Arcanos Menores"],
+  ["Diez de Copas", "Culminación y consecuencias de un ciclo relacionado con emociones, vínculos, sensibilidad y disfrute.", "Al revés: carga, exceso o cierre complicado.", "carta-31-diez-de-copas.jpg", "Arcanos Menores"],
+  ["Sota de Copas", "Curiosidad, aprendizaje y noticias relacionadas con emociones, vínculos, sensibilidad y disfrute.", "Al revés: inmadurez, mensaje confuso o falta de preparación.", "carta-32-sota-de-copas.jpg", "Arcanos Menores"],
+  ["Caballo de Copas", "Movimiento, iniciativa y forma de actuar en emociones, vínculos, sensibilidad y disfrute.", "Al revés: precipitación, impulsividad o falta de dirección.", "carta-33-caballo-de-copas.jpg", "Arcanos Menores"],
+  ["Reina de Copas", "Madurez, comprensión y dominio de emociones, vínculos, sensibilidad y disfrute.", "Al revés: exceso emocional, control o dificultad para expresar esta energía.", "carta-34-reina-de-copas.jpg", "Arcanos Menores"],
+  ["Rey de Copas", "Solidez, experiencia y responsabilidad en emociones, vínculos, sensibilidad y disfrute.", "Al revés: rigidez, exceso de control o problemas para gestionar recursos.", "carta-35-rey-de-copas.jpg", "Arcanos Menores"],
+  ["As de Bastos", "Un comienzo relacionado con acción, energía, creatividad, impulso y proyectos.", "Al revés: oportunidad bloqueada, exceso o dificultad para iniciar.", "carta-36-as-de-bastos.jpg", "Arcanos Menores"],
+  ["Dos de Bastos", "Equilibrio, elección o encuentro relacionado con acción, energía, creatividad, impulso y proyectos.", "Al revés: tensión, indecisión o falta de equilibrio.", "carta-37-dos-de-bastos.jpg", "Arcanos Menores"],
+  ["Tres de Bastos", "Expansión, colaboración o expresión dentro de acción, energía, creatividad, impulso y proyectos.", "Al revés: dispersión, retrasos o colaboración difícil.", "carta-38-tres-de-bastos.jpg", "Arcanos Menores"],
+  ["Cuatro de Bastos", "Estabilidad, pausa o necesidad de revisar acción, energía, creatividad, impulso y proyectos.", "Al revés: estancamiento, apatía o necesidad de movimiento.", "carta-39-cuatro-de-bastos.jpg", "Arcanos Menores"],
+  ["Cinco de Bastos", "Desafío, cambio o fricción en torno a acción, energía, creatividad, impulso y proyectos.", "Al revés: recuperación, aprendizaje o conflicto que empieza a disminuir.", "carta-40-cinco-de-bastos.jpg", "Arcanos Menores"],
+  ["Seis de Bastos", "Avance, intercambio o recuerdo relacionado con acción, energía, creatividad, impulso y proyectos.", "Al revés: dificultad para avanzar o apego al pasado.", "carta-41-seis-de-bastos.jpg", "Arcanos Menores"],
+  ["Siete de Bastos", "Evaluación, estrategia o búsqueda de perspectiva sobre acción, energía, creatividad, impulso y proyectos.", "Al revés: dudas, expectativas poco realistas o falta de estrategia.", "carta-42-siete-de-bastos.jpg", "Arcanos Menores"],
+  ["Ocho de Bastos", "Movimiento, dedicación o profundización en acción, energía, creatividad, impulso y proyectos.", "Al revés: bloqueo, exceso de esfuerzo o dificultad para avanzar.", "carta-43-ocho-de-bastos.jpg", "Arcanos Menores"],
+  ["Nueve de Bastos", "Madurez, resultado o satisfacción vinculada a acción, energía, creatividad, impulso y proyectos.", "Al revés: insatisfacción, exceso o resultado que no llena.", "carta-44-nueve-de-bastos.jpg", "Arcanos Menores"],
+  ["Diez de Bastos", "Culminación y consecuencias de un ciclo relacionado con acción, energía, creatividad, impulso y proyectos.", "Al revés: carga, exceso o cierre complicado.", "carta-45-diez-de-bastos.jpg", "Arcanos Menores"],
+  ["Sota de Bastos", "Curiosidad, aprendizaje y noticias relacionadas con acción, energía, creatividad, impulso y proyectos.", "Al revés: inmadurez, mensaje confuso o falta de preparación.", "carta-46-sota-de-bastos.jpg", "Arcanos Menores"],
+  ["Caballo de Bastos", "Movimiento, iniciativa y forma de actuar en acción, energía, creatividad, impulso y proyectos.", "Al revés: precipitación, impulsividad o falta de dirección.", "carta-47-caballo-de-bastos.jpg", "Arcanos Menores"],
+  ["Reina de Bastos", "Madurez, comprensión y dominio de acción, energía, creatividad, impulso y proyectos.", "Al revés: exceso emocional, control o dificultad para expresar esta energía.", "carta-48-reina-de-bastos.jpg", "Arcanos Menores"],
+  ["Rey de Bastos", "Solidez, experiencia y responsabilidad en acción, energía, creatividad, impulso y proyectos.", "Al revés: rigidez, exceso de control o problemas para gestionar recursos.", "carta-49-rey-de-bastos.jpg", "Arcanos Menores"],
+  ["As de Espadas", "Un comienzo relacionado con pensamiento, decisiones, comunicación y conflictos.", "Al revés: oportunidad bloqueada, exceso o dificultad para iniciar.", "carta-50-as-de-espadas.jpg", "Arcanos Menores"],
+  ["Dos de Espadas", "Equilibrio, elección o encuentro relacionado con pensamiento, decisiones, comunicación y conflictos.", "Al revés: tensión, indecisión o falta de equilibrio.", "carta-51-dos-de-espadas.jpg", "Arcanos Menores"],
+  ["Tres de Espadas", "Expansión, colaboración o expresión dentro de pensamiento, decisiones, comunicación y conflictos.", "Al revés: dispersión, retrasos o colaboración difícil.", "carta-52-tres-de-espadas.jpg", "Arcanos Menores"],
+  ["Cuatro de Espadas", "Estabilidad, pausa o necesidad de revisar pensamiento, decisiones, comunicación y conflictos.", "Al revés: estancamiento, apatía o necesidad de movimiento.", "carta-53-cuatro-de-espadas.jpg", "Arcanos Menores"],
+  ["Cinco de Espadas", "Desafío, cambio o fricción en torno a pensamiento, decisiones, comunicación y conflictos.", "Al revés: recuperación, aprendizaje o conflicto que empieza a disminuir.", "carta-54-cinco-de-espadas.jpg", "Arcanos Menores"],
+  ["Seis de Espadas", "Avance, intercambio o recuerdo relacionado con pensamiento, decisiones, comunicación y conflictos.", "Al revés: dificultad para avanzar o apego al pasado.", "carta-55-seis-de-espadas.jpg", "Arcanos Menores"],
+  ["Siete de Espadas", "Evaluación, estrategia o búsqueda de perspectiva sobre pensamiento, decisiones, comunicación y conflictos.", "Al revés: dudas, expectativas poco realistas o falta de estrategia.", "carta-56-siete-de-espadas.jpg", "Arcanos Menores"],
+  ["Ocho de Espadas", "Movimiento, dedicación o profundización en pensamiento, decisiones, comunicación y conflictos.", "Al revés: bloqueo, exceso de esfuerzo o dificultad para avanzar.", "carta-57-ocho-de-espadas.jpg", "Arcanos Menores"],
+  ["Nueve de Espadas", "Madurez, resultado o satisfacción vinculada a pensamiento, decisiones, comunicación y conflictos.", "Al revés: insatisfacción, exceso o resultado que no llena.", "carta-58-nueve-de-espadas.jpg", "Arcanos Menores"],
+  ["Diez de Espadas", "Culminación y consecuencias de un ciclo relacionado con pensamiento, decisiones, comunicación y conflictos.", "Al revés: carga, exceso o cierre complicado.", "carta-59-diez-de-espadas.jpg", "Arcanos Menores"],
+  ["Sota de Espadas", "Curiosidad, aprendizaje y noticias relacionadas con pensamiento, decisiones, comunicación y conflictos.", "Al revés: inmadurez, mensaje confuso o falta de preparación.", "carta-60-sota-de-espadas.jpg", "Arcanos Menores"],
+  ["Caballo de Espadas", "Movimiento, iniciativa y forma de actuar en pensamiento, decisiones, comunicación y conflictos.", "Al revés: precipitación, impulsividad o falta de dirección.", "carta-61-caballo-de-espadas.jpg", "Arcanos Menores"],
+  ["Reina de Espadas", "Madurez, comprensión y dominio de pensamiento, decisiones, comunicación y conflictos.", "Al revés: exceso emocional, control o dificultad para expresar esta energía.", "carta-62-reina-de-espadas.jpg", "Arcanos Menores"],
+  ["Rey de Espadas", "Solidez, experiencia y responsabilidad en pensamiento, decisiones, comunicación y conflictos.", "Al revés: rigidez, exceso de control o problemas para gestionar recursos.", "carta-63-rey-de-espadas.jpg", "Arcanos Menores"],
+  ["As de Oros", "Un comienzo relacionado con recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: oportunidad bloqueada, exceso o dificultad para iniciar.", "carta-64-as-de-oros.jpg", "Arcanos Menores"],
+  ["Dos de Oros", "Equilibrio, elección o encuentro relacionado con recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: tensión, indecisión o falta de equilibrio.", "carta-65-dos-de-oros.jpg", "Arcanos Menores"],
+  ["Tres de Oros", "Expansión, colaboración o expresión dentro de recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: dispersión, retrasos o colaboración difícil.", "carta-66-tres-de-oros.jpg", "Arcanos Menores"],
+  ["Cuatro de Oros", "Estabilidad, pausa o necesidad de revisar recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: estancamiento, apatía o necesidad de movimiento.", "carta-67-cuatro-de-oros.jpg", "Arcanos Menores"],
+  ["Cinco de Oros", "Desafío, cambio o fricción en torno a recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: recuperación, aprendizaje o conflicto que empieza a disminuir.", "carta-68-cinco-de-oros.jpg", "Arcanos Menores"],
+  ["Seis de Oros", "Avance, intercambio o recuerdo relacionado con recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: dificultad para avanzar o apego al pasado.", "carta-69-seis-de-oros.jpg", "Arcanos Menores"],
+  ["Siete de Oros", "Evaluación, estrategia o búsqueda de perspectiva sobre recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: dudas, expectativas poco realistas o falta de estrategia.", "carta-70-siete-de-oros.jpg", "Arcanos Menores"],
+  ["Ocho de Oros", "Movimiento, dedicación o profundización en recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: bloqueo, exceso de esfuerzo o dificultad para avanzar.", "carta-71-ocho-de-oros.jpg", "Arcanos Menores"],
+  ["Nueve de Oros", "Madurez, resultado o satisfacción vinculada a recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: insatisfacción, exceso o resultado que no llena.", "carta-72-nueve-de-oros.jpg", "Arcanos Menores"],
+  ["Diez de Oros", "Culminación y consecuencias de un ciclo relacionado con recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: carga, exceso o cierre complicado.", "carta-73-diez-de-oros.jpg", "Arcanos Menores"],
+  ["Sota de Oros", "Curiosidad, aprendizaje y noticias relacionadas con recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: inmadurez, mensaje confuso o falta de preparación.", "carta-74-sota-de-oros.jpg", "Arcanos Menores"],
+  ["Caballo de Oros", "Movimiento, iniciativa y forma de actuar en recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: precipitación, impulsividad o falta de dirección.", "carta-75-caballo-de-oros.jpg", "Arcanos Menores"],
+  ["Reina de Oros", "Madurez, comprensión y dominio de recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: exceso emocional, control o dificultad para expresar esta energía.", "carta-76-reina-de-oros.jpg", "Arcanos Menores"],
+  ["Rey de Oros", "Solidez, experiencia y responsabilidad en recursos, trabajo, estabilidad, cuerpo y mundo material.", "Al revés: rigidez, exceso de control o problemas para gestionar recursos.", "carta-77-rey-de-oros.jpg", "Arcanos Menores"]
+];
+const spreads=[
+ {id:"one",name:"Una carta",description:"Una carta para iluminar tu pregunta.",cards:1},
+ {id:"three",name:"Tres cartas",description:"Pasado · Presente · Futuro.",cards:3},
+ {id:"celtic",name:"Cruz Celta",description:"La tirada clásica de 10 cartas.",cards:10},
+ {id:"custom",name:"Personalizada",description:"Cinco cartas para una lectura más amplia.",cards:5}
+];
+let spread=null,cards=[];
+
+function home(){
+ app.innerHTML=`<main class="page home"><div class="ornament">✦</div><p class="eyebrow">MILLENNIAL TAROT</p><h1>Tu lectura.<br><em>Tu intuición.</em></h1><p class="intro">Elige una tirada, respira y deja que las cartas hablen.</p><button class="primary" id="start">Comenzar lectura</button><div class="footer-note">A little magic for ordinary days ✦</div></main>`;
+ document.getElementById("start").onclick=spreadsPage;
+}
+function spreadsPage(){
+ app.innerHTML=`<main class="page"><button class="back" id="back">← Volver</button><p class="eyebrow">MILLENNIAL TAROT</p><h2>Elige tu tirada</h2><p class="intro">¿Qué quieres explorar hoy?</p><section class="spread-list">${spreads.map(s=>`<button class="spread-card" data-id="${s.id}"><span class="spread-number">${String(s.cards).padStart(2,"0")}</span><span><strong>${s.name}</strong><small>${s.description}</small></span><span class="arrow">→</span></button>`).join("")}</section></main>`;
+ document.getElementById("back").onclick=home;
+ document.querySelectorAll(".spread-card").forEach(b=>b.onclick=()=>{spread=spreads.find(s=>s.id===b.dataset.id);cards=[];reading()});
+}
+function draw(){
+ const available=deck.filter(c=>!cards.some(x=>x[0]===c[0]));
+ const c=available[Math.floor(Math.random()*available.length)]||deck[0];
+ cards.push([...c,Math.random()<.25]);
+ reading();
+}
+function openCard(c){
+ modalType.textContent=`${c[4]} · ${c[3].includes("carta-")?"Millennial Tarot":""}`;
+ modalTitle.textContent=c[0];
+ modalMeaning.textContent=c[1];
+ modalReverse.innerHTML=`<strong>Si aparece invertida:</strong> ${c[2]}`;
+ modal.classList.add("open");
+ modal.setAttribute("aria-hidden","false");
+}
+function closeModal(){
+ modal.classList.remove("open");
+ modal.setAttribute("aria-hidden","true");
+}
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+document.getElementById("modalClose").onclick=closeModal;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+function reading(){
+ const complete=cards.length>=spread.cards;
+ const positions=spread.id==="three"?["Pasado","Presente","Futuro"]:Array.from({length:spread.cards},(_,i)=>`Carta ${i+1}`);
+ app.innerHTML=`<main class="page reading"><button class="back" id="back">← Tiradas</button><p class="eyebrow">${spread.name.toUpperCase()}</p><h2>${complete?"Tu lectura":"Concéntrate en tu pregunta"}</h2><p class="intro">${complete?"Toca cualquier carta para ver su explicación.":`${cards.length} de ${spread.cards} cartas reveladas`}</p><section class="cards">${cards.map((c,i)=>`<article class="tarot-item ${c[5]?"reversed":""}"><div class="card-frame"><img class="card-image" src="${c[3]}" alt="${c[0]}" data-index="${i}"></div><div class="card-label"><div class="card-position">${positions[i]||`Carta ${i+1}`}</div><div class="card-name">${c[0]}</div><div class="card-state">${c[5]?"INVERTIDA":"AL DERECHO"}</div><div class="tap-hint">Toca la carta para ver la explicación</div></div></article>`).join("")}${complete?"":`<button class="draw-card" id="draw">Revelar ${cards.length+1}ª carta <span>✦</span></button>`}</section>${complete?`<button class="primary" id="new">Nueva lectura</button>`:""}</main>`;
+ document.getElementById("back").onclick=spreadsPage;
+ document.querySelectorAll(".card-image").forEach(img=>img.onclick=()=>openCard(cards[Number(img.dataset.index)]));
+ if(!complete)document.getElementById("draw").onclick=draw;
+ else document.getElementById("new").onclick=spreadsPage;
+}
+home();
+</script>
+</body>
+</html>
