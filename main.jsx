@@ -1,10 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./styles.css";
-
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+import React,{useState}from"react";import{createRoot}from"react-dom/client";import"./styles.css";
+const spreads=[["one","Una carta","Consejo o mensaje del momento",1],["three","Tres cartas","Pasado · Presente · Futuro",3],["celtic","Cruz Celta","Una lectura profunda de 10 cartas",10],["custom","Personalizada","Tú decides cuántas cartas sacar",5]];
+const cards=[["El Loco","0"],["La Sacerdotisa","II"],["La Emperatriz","III"],["El Ermitaño","IX"],["La Estrella","XVII"],["La Luna","XVIII"],["El Sol","XIX"],["El Mundo","XXI"]];
+function App(){const[s,setS]=useState("home"),[spread,setSpread]=useState(null),[drawn,setDrawn]=useState([]);
+const start=x=>{setSpread(x);setDrawn([]);setS("reading")};
+const draw=()=>{let a=cards.filter(c=>!drawn.some(d=>d[0]===c[0]));if(!a.length)return;let c=a[Math.floor(Math.random()*a.length)];setDrawn([...drawn,[...c,Math.random()<.25]])};
+if(s==="home")return <main className="app"><section className="home"><i>✦</i><div className="brand"><small>THE</small><h1>MILLENNIAL</h1><h2>TAROT</h2></div><p>Discover what the cards have to say.</p><div className="deck"><div>✦</div></div><button className="primary" onClick={()=>setS("spreads")}>Hacer una tirada <b>→</b></button><nav><button onClick={()=>setS("spreads")}>Mis tiradas</button><span>·</span><button>Las cartas</button></nav><i>✦</i></section></main>;
+if(s==="spreads")return <main className="app"><section className="screen"><button className="back" onClick={()=>setS("home")}>← Volver</button><header><em>✦</em><h1>Elige tu tirada</h1><p>Elige la lectura que mejor encaje con tu pregunta.</p></header><div className="grid">{spreads.map(x=><button className="spread" key={x[0]} onClick={()=>start(x)}><strong>{x[3]}</strong><h2>{x[1]}</h2><small>{x[2]}</small><b>→</b></button>)}</div></section></main>;
+return <main className="app"><section className="screen"><button className="back" onClick={()=>setS("spreads")}>← Tiradas</button><header><em>✦ {spread?.[1]}</em><h1>Concéntrate en tu pregunta</h1><p>Cuando estés preparada, saca una carta del mazo.</p></header><div className="deck-area"><button className="deck draw" onClick={draw} disabled={drawn.length>=spread?.[3]}><div>✦</div></button></div><p className="counter">{drawn.length} / {spread?.[3]} cartas</p><div className="drawn">{drawn.map((c,i)=><article key={i}><div className={"mini "+(c[2]?"rev":"")}><span>{c[1]}</span>✦<small>{c[0]}</small></div><div><small>Carta {i+1}</small><h3>{c[0]}</h3>{c[2]&&<em>Invertida</em>}</div></article>)}</div></section></main>}
+createRoot(document.getElementById("root")).render(<App/>);
