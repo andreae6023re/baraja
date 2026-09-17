@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Millennial Tarot</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+:root{--bg:#111317;--panel:#191b20;--line:#45423d;--text:#e8e0d2;--muted:#aaa294;--gold:#c6a875}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#292721 0,#111317 42rem);color:var(--text);font-family:Inter,sans-serif;min-height:100vh}button{font:inherit}
+.page{width:min(100% - 36px,820px);margin:auto;padding:42px 0 70px}.home{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.ornament{color:var(--gold);font-size:28px;margin-bottom:22px}.eyebrow{color:var(--gold);letter-spacing:.28em;font-size:11px;font-weight:600;margin:0 0 20px}
+h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:500}h1{font-size:clamp(52px,10vw,88px);line-height:.82;margin:0}h1 em{color:var(--gold)}
+h2{font-size:clamp(42px,8vw,64px);margin:0 0 5px}.intro{color:var(--muted);line-height:1.7;max-width:500px;margin:12px auto 28px}
+.primary{border:1px solid var(--gold);background:transparent;color:var(--text);padding:14px 25px;border-radius:2px;cursor:pointer}.primary:hover{background:var(--gold);color:#151515}
+.footer-note{color:#77746d;font-family:"Cormorant Garamond",serif;font-size:16px;margin-top:50px}.back{border:0;background:none;color:var(--muted);padding:0;cursor:pointer;margin-bottom:48px}
+.spread-list{display:grid;gap:12px;margin-top:35px}.spread-card{width:100%;display:grid;grid-template-columns:55px 1fr auto;align-items:center;gap:18px;text-align:left;border:1px solid var(--line);background:rgba(25,27,32,.78);color:var(--text);padding:20px;cursor:pointer}
+.spread-card:hover{border-color:var(--gold);transform:translateY(-2px)}.spread-number{color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:28px}
+.spread-card strong{display:block;font-family:"Cormorant Garamond",serif;font-size:25px;font-weight:500}.spread-card small{display:block;color:var(--muted);margin-top:3px}.arrow{color:var(--gold);font-size:20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:32px}
+.tarot-card{min-height:300px;border:1px solid #575044;background:linear-gradient(145deg,#22231f,#15171a);padding:22px;text-align:center;display:flex;flex-direction:column;justify-content:center;box-shadow:0 10px 35px #0004}.tarot-card.reversed{transform:rotate(180deg)}
+.card-symbol{color:var(--gold);font-size:34px}.card-count{color:#77746d;font-size:10px;letter-spacing:.2em}.tarot-card h3{font-size:31px;margin:12px 0 2px}.tarot-card>span{color:var(--gold);font-size:9px;letter-spacing:.16em}.tarot-card p{color:var(--muted);line-height:1.55;font-size:13px}
+.draw-card{min-height:300px;border:1px dashed #575044;background:transparent;color:var(--gold);cursor:pointer;font-family:"Cormorant Garamond",serif;font-size:24px}.draw-card:hover{background:#c6a87510;border-color:var(--gold)}.draw-card span{display:block;margin-top:12px}
+.reading .primary{margin-top:28px}@media(max-width:520px){.page{padding-top:28px}.back{margin-bottom:34px}.spread-card{padding:16px;grid-template-columns:43px 1fr auto}.cards{grid-template-columns:1fr}.tarot-card,.draw-card{min-height:340px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const app=document.getElementById("app");
+const spreads=[
+{id:"one",name:"Una carta",description:"Una carta para iluminar tu pregunta.",cards:1},
+{id:"three",name:"Tres cartas",description:"Pasado · Presente · Futuro.",cards:3},
+{id:"celtic",name:"Cruz Celta",description:"La tirada clásica de 10 cartas.",cards:10},
+{id:"custom",name:"Personalizada",description:"Elige tú misma el número de cartas.",cards:5}
+];
+const deck=[
+["The Fool","El Loco","Nuevos comienzos, libertad y confianza."],
+["The Magician","El Mago","Recursos, iniciativa y capacidad de crear."],
+["The High Priestess","La Sacerdotisa","Intuición, misterio y conocimiento interior."],
+["The Empress","La Emperatriz","Creatividad, abundancia y cuidado."],
+["The Emperor","El Emperador","Estructura, estabilidad y autoridad."],
+["The Lovers","Los Enamorados","Elecciones, vínculos y valores personales."],
+["The Chariot","El Carro","Dirección, determinación y avance."],
+["Strength","La Fuerza","Coraje, paciencia y autocontrol."],
+["The Hermit","El Ermitaño","Introspección, búsqueda y pausa."],
+["Wheel of Fortune","La Rueda de la Fortuna","Cambios, ciclos y movimiento."]
+];
+let spread=null,cards=[];
+function home(){app.innerHTML=`<main class="page home"><div class="ornament">✦</div><p class="eyebrow">MILLENNIAL TAROT</p><h1>Tu lectura.<br><em>Tu intuición.</em></h1><p class="intro">Elige una tirada, respira y deja que las cartas hablen.</p><button class="primary" id="start">Comenzar lectura</button><div class="footer-note">A little magic for ordinary days ✦</div></main>`;document.getElementById("start").onclick=spreadsPage}
+function spreadsPage(){app.innerHTML=`<main class="page"><button class="back" id="back">← Volver</button><p class="eyebrow">MILLENNIAL TAROT</p><h2>Elige tu tirada</h2><p class="intro">¿Qué quieres explorar hoy?</p><section class="spread-list">${spreads.map(s=>`<button class="spread-card" data-id="${s.id}"><span class="spread-number">${String(s.cards).padStart(2,"0")}</span><span><strong>${s.name}</strong><small>${s.description}</small></span><span class="arrow">→</span></button>`).join("")}</section></main>`;document.getElementById("back").onclick=home;document.querySelectorAll(".spread-card").forEach(b=>b.onclick=()=>{spread=spreads.find(s=>s.id===b.dataset.id);cards=[];reading()})}
+function draw(){let available=deck.filter(c=>!cards.some(x=>x[0]===c[0]));let c=available[Math.floor(Math.random()*available.length)]||deck[0];cards.push([...c,Math.random()<.25]);reading()}
+function reading(){let complete=cards.length>=spread.cards;app.innerHTML=`<main class="page reading"><button class="back" id="back">← Tiradas</button><p class="eyebrow">${spread.name.toUpperCase()}</p><h2>${complete?"Tu lectura":"Concéntrate en tu pregunta"}</h2><p class="intro">${complete?"Estas son tus cartas.":`${cards.length} de ${spread.cards} cartas reveladas`}</p><section class="cards">${cards.map((c,i)=>`<article class="tarot-card ${c[3]?"reversed":""}"><div class="card-symbol">${["☽","✦","♢","☀","♜","♡","☄","♧","✧","◌"][i%10]}</div><div class="card-count">${i+1}</div><h3>${c[1]}</h3><span>${c[3]?"INVERTIDA":"AL DERECHO"}</span><p>${c[2]}</p></article>`).join("")}${complete?"":`<button class="draw-card" id="draw">Revelar ${cards.length+1}ª carta <span>✦</span></button>`}</section>${complete?`<button class="primary" id="new">Nueva lectura</button>`:""}</main>`;document.getElementById("back").onclick=spreadsPage;if(!complete)document.getElementById("draw").onclick=draw;else document.getElementById("new").onclick=spreadsPage}
+home();
+</script>
+</body>
+</html>
