@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #111317;
+  --panel: #191b20;
+  --line: #3c3b3b;
+  --text: #e8e0d2;
+  --muted: #aaa294;
+  --gold: #c6a875;
+  --gold-soft: #9e8964;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% 0%, #292721 0, var(--bg) 42rem),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  min-height: 100vh;
+}
+
+button { font: inherit; }
+
+.page {
+  width: min(100% - 36px, 820px);
+  margin: 0 auto;
+  padding: 42px 0 70px;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ornament {
+  color: var(--gold);
+  font-size: 28px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  color: var(--gold);
+  letter-spacing: .28em;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0 0 20px;
+}
+
+h1, h2, h3 {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: clamp(52px, 10vw, 88px);
+  line-height: .82;
+  margin: 0;
+}
+
+h1 em { color: var(--gold); }
+
+h2 {
+  font-size: clamp(42px, 8vw, 64px);
+  margin: 0 0 5px;
+}
+
+.intro {
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 12px auto 28px;
+}
+
+.primary {
+  border: 1px solid var(--gold-soft);
+  background: transparent;
+  color: var(--text);
+  padding: 14px 25px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.primary:hover {
+  background: var(--gold);
+  color: #151515;
+}
+
+.footer-note {
+  color: #77746d;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  margin-top: 50px;
+}
+
+.back {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 48px;
+}
+
+.spread-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 35px;
+}
+
+.spread-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 55px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: rgba(25,27,32,.78);
+  color: var(--text);
+  padding: 20px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.spread-card:hover {
+  border-color: var(--gold-soft);
+  transform: translateY(-2px);
+}
+
+.spread-number {
+  color: var(--gold);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 28px;
+}
+
+.spread-card strong {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.spread-card small {
+  display: block;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.arrow { color: var(--gold); font-size: 20px; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.tarot-card {
+  min-height: 300px;
+  border: 1px solid #575044;
+  background: linear-gradient(145deg, #22231f, #15171a);
+  padding: 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 10px 35px rgba(0,0,0,.28);
+}
+
+.tarot-card.reversed { transform: rotate(180deg); }
+
+.card-symbol {
+  color: var(--gold);
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+
+.card-count {
+  color: #77746d;
+  font-size: 10px;
+  letter-spacing: .2em;
+}
+
+.tarot-card h3 {
+  font-size: 31px;
+  margin: 12px 0 2px;
+}
+
+.tarot-card > span {
+  color: var(--gold);
+  font-size: 9px;
+  letter-spacing: .16em;
+}
+
+.tarot-card p {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 13px;
+}
+
+.draw-card {
+  min-height: 300px;
+  border: 1px dashed #575044;
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  transition: .2s;
+}
+
+.draw-card:hover {
+  background: rgba(198,168,117,.06);
+  border-color: var(--gold);
+}
+
+.draw-card span { display: block; margin-top: 12px; }
+
+.reading .primary { margin-top: 28px; }
+
+@media (max-width: 520px) {
+  .page { padding-top: 28px; }
+  .back { margin-bottom: 34px; }
+  .spread-card { padding: 16px; grid-template-columns: 43px 1fr auto; }
+  .cards { grid-template-columns: 1fr; }
+  .tarot-card, .draw-card { min-height: 340px; }
+}
